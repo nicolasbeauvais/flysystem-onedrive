@@ -3,8 +3,8 @@
 namespace NicolasBeauvais\FlysystemOneDrive;
 
 use ArrayObject;
-use League\Flysystem\Config;
 use Microsoft\Graph\Graph;
+use League\Flysystem\Config;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Adapter\Polyfill\NotSupportingVisibilityTrait;
 
@@ -17,13 +17,12 @@ class OneDriveAdapter extends AbstractAdapter
 
     private $usePath;
 
-
     public function __construct(Graph $graph, string $prefix = 'root', bool $usePath = true)
     {
         $this->graph = $graph;
         $this->usePath = $usePath;
 
-        $this->setPathPrefix('/drive/' . $prefix . ($this->usePath ? ':' : ''));
+        $this->setPathPrefix('/drive/'.$prefix.($this->usePath ? ':' : ''));
     }
 
     /**
@@ -73,8 +72,8 @@ class OneDriveAdapter extends AbstractAdapter
                 ->attachBody([
                     'name' => end($patch),
                     'parentReference' => [
-                        'path' => $this->getPathPrefix() . (empty($sliced) ? '': rtrim($sliced, '/') . '/')
-                    ]
+                        'path' => $this->getPathPrefix().(empty($sliced) ? '' : rtrim($sliced, '/').'/'),
+                    ],
                 ])
                 ->execute();
         } catch (\Exception $e) {
@@ -95,12 +94,12 @@ class OneDriveAdapter extends AbstractAdapter
         $sliced = implode('/', array_slice($patch, 0, -1));
 
         try {
-            $promise = $this->graph->createRequest('POST', $endpoint . ($this->usePath ? ':' : '') . '/copy')
+            $promise = $this->graph->createRequest('POST', $endpoint.($this->usePath ? ':' : '').'/copy')
                 ->attachBody([
                     'name' => end($patch),
                     'parentReference' => [
-                        'path' => $this->getPathPrefix() . (empty($sliced) ? '': rtrim($sliced, '/') . '/')
-                    ]
+                        'path' => $this->getPathPrefix().(empty($sliced) ? '' : rtrim($sliced, '/').'/'),
+                    ],
                 ])
                 ->executeAsync();
             $promise->wait();
@@ -144,16 +143,16 @@ class OneDriveAdapter extends AbstractAdapter
         $sliced = implode('/', array_slice($patch, 0, -1));
 
         if (empty($sliced) && $this->usePath) {
-            $endpoint = str_replace(':/', '', $this->getPathPrefix()) . '/children';
+            $endpoint = str_replace(':/', '', $this->getPathPrefix()).'/children';
         } else {
-            $endpoint = $this->applyPathPrefix($sliced) . ($this->usePath ? ':' : '') . '/children';
+            $endpoint = $this->applyPathPrefix($sliced).($this->usePath ? ':' : '').'/children';
         }
 
         try {
             $response = $this->graph->createRequest('POST', $endpoint)
                 ->attachBody([
                     'name' => end($patch),
-                    'folder' => new ArrayObject()
+                    'folder' => new ArrayObject(),
                 ])->execute();
         } catch (\Exception $e) {
             return false;
@@ -175,7 +174,7 @@ class OneDriveAdapter extends AbstractAdapter
      */
     public function read($path)
     {
-        if (!$object = $this->readStream($path)) {
+        if (! $object = $this->readStream($path)) {
             return false;
         }
 
@@ -196,10 +195,10 @@ class OneDriveAdapter extends AbstractAdapter
         try {
             $file = tempnam(sys_get_temp_dir(), 'onedrive');
 
-            $this->graph->createRequest('GET', $path . ($this->usePath ? ':' : '') . '/content')
+            $this->graph->createRequest('GET', $path.($this->usePath ? ':' : '').'/content')
                 ->download($file);
 
-            $stream = fopen($file, "r");
+            $stream = fopen($file, 'r');
         } catch (\Exception $e) {
             return false;
         }
@@ -213,9 +212,9 @@ class OneDriveAdapter extends AbstractAdapter
     public function listContents($directory = '', $recursive = false): array
     {
         if ($directory === '' && $this->usePath) {
-            $endpoint = str_replace(':/', '', $this->getPathPrefix()) . '/children';
+            $endpoint = str_replace(':/', '', $this->getPathPrefix()).'/children';
         } else {
-            $endpoint = $this->applyPathPrefix($directory) . ($this->usePath ? ':' : '') . '/children';
+            $endpoint = $this->applyPathPrefix($directory).($this->usePath ? ':' : '').'/children';
         }
 
         try {
@@ -223,7 +222,7 @@ class OneDriveAdapter extends AbstractAdapter
             $response = $this->graph->createRequest('GET', $endpoint)->execute();
             $items = $response->getBody()['value'];
 
-            if (!count($items)) {
+            if (! count($items)) {
                 return [];
             }
 
@@ -231,7 +230,7 @@ class OneDriveAdapter extends AbstractAdapter
                 $results[] = $this->normalizeResponse($item, $this->applyPathPrefix($directory));
 
                 if ($recursive && isset($item['folder'])) {
-                    $results = array_merge($results, $this->listContents($directory . '/' . $item['name'], true));
+                    $results = array_merge($results, $this->listContents($directory.'/'.$item['name'], true));
                 }
             }
         } catch (\Exception $e) {
@@ -288,7 +287,7 @@ class OneDriveAdapter extends AbstractAdapter
     {
         $path = parent::applyPathPrefix($path);
 
-        return '/' . trim($path, '/');
+        return '/'.trim($path, '/');
     }
 
     public function getGraph(): Graph
@@ -311,7 +310,7 @@ class OneDriveAdapter extends AbstractAdapter
                 $contents = $stream = \GuzzleHttp\Psr7\stream_for($contents);
             }
 
-            $response = $this->graph->createRequest("PUT", $path . ($this->usePath ? ':' : '') . '/content')
+            $response = $this->graph->createRequest('PUT', $path.($this->usePath ? ':' : '').'/content')
                 ->attachBody($contents)
                 ->execute();
         } catch (\Exception $e) {
@@ -326,7 +325,7 @@ class OneDriveAdapter extends AbstractAdapter
         $path = trim($this->removePathPrefix($path), '/');
 
         return [
-            'path' => empty($path) ? $response['name'] : $path . '/' . $response['name'],
+            'path' => empty($path) ? $response['name'] : $path.'/'.$response['name'],
             'timestamp' => strtotime($response['lastModifiedDateTime']),
             'size' => $response['size'],
             'bytes' => $response['size'],
