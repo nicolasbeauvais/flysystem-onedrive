@@ -331,6 +331,7 @@ class OneDriveAdapter extends AbstractAdapter
             'bytes' => $response['size'],
             'type' => isset($response['file']) ? 'file' : 'dir',
             'mimetype' => isset($response['file']) ? $response['file']['mimeType'] : null,
+            'link' => isset($response['webUrl']) ? $response['webUrl'] : null,
         ];
     }
 }
