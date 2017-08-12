@@ -2,6 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/nicolasbeauvais/flysystem-onedrive.svg?style=flat-square)](https://packagist.org/packages/nicolasbeauvais/flysystem-onedrive)
 [![Build Status](https://img.shields.io/travis/nicolasbeauvais/flysystem-onedrive/master.svg?style=flat-square)](https://travis-ci.org/nicolasbeauvais/flysystem-onedrive)
+[![StyleCI](https://styleci.io/repos/100028565/shield?branch=master)](https://styleci.io/repos/100028565)
 [![Quality Score](https://img.shields.io/scrutinizer/g/nicolasbeauvais/flysystem-onedrive.svg?style=flat-square)](https://scrutinizer-ci.com/g/nicolasbeauvais/flysystem-onedrive)
 [![Total Downloads](https://img.shields.io/packagist/dt/nicolasbeauvais/flysystem-onedrive.svg?style=flat-square)](https://packagist.org/packages/nicolasbeauvais/flysystem-onedrive)
 
