@@ -306,9 +306,7 @@ class OneDriveAdapter extends AbstractAdapter
         $path = $this->applyPathPrefix($path);
 
         try {
-            if (is_string($contents)) {
-                $contents = $stream = \GuzzleHttp\Psr7\stream_for($contents);
-            }
+            $contents = $stream = \GuzzleHttp\Psr7\stream_for($contents);
 
             $response = $this->graph->createRequest('PUT', $path.($this->usePath ? ':' : '').'/content')
                 ->attachBody($contents)
