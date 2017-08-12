@@ -3,9 +3,9 @@
 namespace NicolasBeauvais\FlysystemOneDrive\Test;
 
 use Microsoft\Graph\Graph;
+use PHPUnit\Framework\TestCase;
 use Microsoft\Graph\Http\GraphRequest;
 use NicolasBeauvais\FlysystemOneDrive\OneDriveAdapter;
-use PHPUnit\Framework\TestCase;
 
 class OneDriveAdapterTest extends TestCase
 {
