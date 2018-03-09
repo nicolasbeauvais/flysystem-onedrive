@@ -13,7 +13,7 @@ This package contains a [Flysystem](https://flysystem.thephpleague.com/) adapter
 You can install the package via composer:
 
 ``` bash
-composer require nicolas-beauvais/flysystem-onedrive
+composer require nicolasbeauvais/flysystem-onedrive
 ```
 
 ## Usage
