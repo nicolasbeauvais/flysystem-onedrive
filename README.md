@@ -1,3 +1,5 @@
+## This package is not maintained anymore.
+
 # Flysystem adapter for the Microsoft OneDrive API
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/nicolasbeauvais/flysystem-onedrive.svg?style=flat-square)](https://packagist.org/packages/nicolasbeauvais/flysystem-onedrive)
